@@ -4,13 +4,26 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     system.url = "path:./stubs/no-system";
+
+    # nix-vscode-extensions exposes its open-vsx + vscode-marketplace
+    # extension catalogues through an overlay. We apply it here (rather
+    # than consuming `extensions.<system>.open-vsx` from the flake's
+    # outputs) because the flake's own pkgs has allowUnfree commented
+    # out (extensions.nix:11), so unfree extensions like
+    # anthropic.claude-code fail to evaluate from that side. Applying
+    # the overlay against our pkgs (config.allowUnfree = true here)
+    # makes the unfree gate pass for downstream consumers.
+    nix-vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+    nix-vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, system }: {
+  outputs = { self, nixpkgs, system, nix-vscode-extensions }: {
     pkgs = import nixpkgs {
       system = system.system;
       config.allowUnfree = true;
       overlays = [
+        nix-vscode-extensions.overlays.default
+
         # openldap's syncreplication self-tests (test017 / test018) rely
         # on `sleep 7` for the consumer slapd to catch up — flakes under
         # any build-host load. nixpkgs CI hits the same flake (NixOS/
