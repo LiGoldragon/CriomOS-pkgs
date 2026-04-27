@@ -22,6 +22,17 @@
         (_: prev: {
           openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
         })
+
+        # SpamAssassin 4.0.1's test suite fails 3/216 programs (3/3673
+        # subtests) — DNS / network-dependent tests that can't pass in
+        # the nix sandbox. Hits us via the evolution → dbus → mail-stack
+        # closure that lands on every node with a dbus system bus. The
+        # package binary itself is fine; only the build-time test phase
+        # is brittle. Re-evaluate when nixpkgs unbreaks the suite (same
+        # mechanism as openldap).
+        (_: prev: {
+          spamassassin = prev.spamassassin.overrideAttrs (_: { doCheck = false; });
+        })
       ];
     };
   };
