@@ -2,7 +2,7 @@
   description = "CriomOS-pkgs — instantiates nixpkgs for one (nixpkgs-rev, system) tuple, with CriomOS's overlays applied. Consumed by CriomOS as a flake input; living in its own repo means CriomOS source edits don't invalidate the pkgs eval cache. The expensive `import nixpkgs { ... }` is keyed only on (nixpkgs.narHash, system.narHash, overlays-content), so it caches across CriomOS iteration.";
 
   inputs = {
-    nixpkgs.url = "github:LiGoldragon/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:LiGoldragon/nixpkgs?ref=main";
     system.url = "path:./stubs/no-system";
 
     # nix-vscode-extensions exposes its open-vsx + vscode-marketplace
