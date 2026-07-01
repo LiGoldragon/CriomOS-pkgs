@@ -18,8 +18,7 @@ cache across CriomOS iteration.
   [`CriomOS`](https://github.com/LiGoldragon/CriomOS).
 - The horizon projection logic. That's
   [`horizon-rs`](https://github.com/LiGoldragon/horizon-rs).
-- The deploy orchestrator. That's
-  [`lojix-cli`](https://github.com/LiGoldragon/lojix-cli).
+- The deploy orchestrator. That's Lojix.
 
 ## Conventions
 
