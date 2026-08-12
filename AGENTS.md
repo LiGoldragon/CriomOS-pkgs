@@ -27,3 +27,10 @@ cache across CriomOS iteration.
 - Overlays added here should have a comment explaining the
   *why*: which upstream issue, which consumer pulls the package,
   why a global overlay vs surgical fix. Cite issue URLs.
+
+## Protos estate status
+
+Protos estate scope: out of scope
+Stack: not applicable
+Role: package source
+This is scope metadata, not a stack.
