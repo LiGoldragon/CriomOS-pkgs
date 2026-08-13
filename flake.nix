@@ -46,6 +46,22 @@
         (_: prev: {
           spamassassin = prev.spamassassin.overrideAttrs (_: { doCheck = false; });
         })
+
+        # GTK MR !10130 — GLArea DMA-buffer / GL-texture ownership leaks.
+        # The fix landed in GTK main on 2026-07-16 (commit 7ff233c7, merged
+        # via 7a7e86ec closing issue #8303) but is not in stable GTK 4.22.4
+        # shipped by nixpkgs-unstable. Backport until nixpkgs picks up a
+        # GTK release that includes it.
+        (_: prev: {
+          gtk4 = prev.gtk4.overrideAttrs (old: {
+            patches = (old.patches or []) ++ [
+              (prev.fetchpatch {
+                url = "https://github.com/GNOME/gtk/commit/7ff233c7ff2a9949ffd28c9ff55500e1b7578e5e.patch";
+                hash = "sha256-J22luJ9SgAe4CZTcpGqpfndZHEEgbVEccWSyK18jbKo=";
+              })
+            ];
+          });
+        })
       ];
     };
   };
