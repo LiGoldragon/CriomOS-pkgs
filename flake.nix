@@ -58,10 +58,12 @@
           })))
 
         # taskwarrior 3.5.0's taskchampion links the system sqlite3 on this
-        # nixpkgs, which does not list sqlite among its build inputs.
+        # nixpkgs, which neither lists sqlite among its build inputs nor
+        # passes it to the final link of the task executables.
         (_: prev: {
           taskwarrior3 = prev.taskwarrior3.overrideAttrs (old: {
             buildInputs = (old.buildInputs or [ ]) ++ [ prev.sqlite ];
+            NIX_LDFLAGS = "-lsqlite3";
           });
         })
       ];
