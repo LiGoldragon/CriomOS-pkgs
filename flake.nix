@@ -47,15 +47,15 @@
           spamassassin = prev.spamassassin.overrideAttrs (_: { doCheck = false; });
         })
 
-        # joshuto 0.9.9 locks libgit2-sys 0.16 (libgit2 1.7); nixpkgs ships
-        # libgit2 1.9 and forbids the vendored copy, so the build finds no
-        # libgit2 it accepts. It builds against its own vendored libgit2.
-        (_: prev: {
-          joshuto = prev.joshuto.overrideAttrs (old: {
+        # These packages lock a libgit2-sys whose accepted libgit2 range
+        # nixpkgs' libgit2 no longer meets (joshuto 0.9.9: libgit2-sys 0.16;
+        # lapce 0.4.6: libgit2-sys 0.18, libgit2 1.9), and nixpkgs forbids
+        # the vendored copy. Each builds against its own vendored libgit2.
+        (_: prev: prev.lib.genAttrs [ "joshuto" "lapce" ] (name:
+          prev.${name}.overrideAttrs (old: {
             nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ prev.pkg-config ];
             preBuild = (old.preBuild or "") + "\nexport LIBGIT2_NO_VENDOR=0\n";
-          });
-        })
+          })))
       ];
     };
   };
