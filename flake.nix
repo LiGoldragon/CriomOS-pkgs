@@ -56,6 +56,14 @@
             nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ prev.pkg-config ];
             preBuild = (old.preBuild or "") + "\nexport LIBGIT2_NO_VENDOR=0\n";
           })))
+
+        # taskwarrior 3.5.0's taskchampion links the system sqlite3 on this
+        # nixpkgs, which does not list sqlite among its build inputs.
+        (_: prev: {
+          taskwarrior3 = prev.taskwarrior3.overrideAttrs (old: {
+            buildInputs = (old.buildInputs or [ ]) ++ [ prev.sqlite ];
+          });
+        })
       ];
     };
   };
