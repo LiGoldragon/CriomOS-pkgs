@@ -46,6 +46,16 @@
         (_: prev: {
           spamassassin = prev.spamassassin.overrideAttrs (_: { doCheck = false; });
         })
+
+        # joshuto 0.9.9 locks libgit2-sys 0.16 (libgit2 1.7); nixpkgs ships
+        # libgit2 1.9 and forbids the vendored copy, so the build finds no
+        # libgit2 it accepts. It builds against its own vendored libgit2.
+        (_: prev: {
+          joshuto = prev.joshuto.overrideAttrs (old: {
+            nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ prev.pkg-config ];
+            preBuild = (old.preBuild or "") + "\nexport LIBGIT2_NO_VENDOR=0\n";
+          });
+        })
       ];
     };
   };
